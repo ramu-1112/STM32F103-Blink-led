@@ -3,6 +3,7 @@
 .thumb
 
 .global Default_Handler
+.global Reset_Handler
 .global vector_table
 .word _sidata
 .word _sdata 

@@ -1,24 +1,20 @@
-TARGET = firmware
-C_SOURCES = main.c
-ASM_SOURCES = startup.S
-LD_SCRIPT = linker.ld
+target = firmware.elf
+src_C = main.c
+src_S = startup.S
+src_ld = linker.ld
 
-CC = arm-none-eabi-gcc
-CFLAGS = -mcpu=cortex-m3 -mthumb -O2 -Wall -ffreestanding -nostdlib
-LDFLAGS = -T $(LD_SCRIPT) -nostdlib -Wl,--gc-sections
+cc = arm-none-eabi-gcc
+ld = arm-none-eabi-ld 
+cflags = -mcpu=cortex-m3 -mthumb -O2 -Wall -ffreestanding -nostartfiles -nostdlib
+ldflags = -T $(src_ld) --gc-section
+obj = $(src_C:.c=.o)
+obj += $(src_S:.S=.o)
 
-OBJ = $(C_SOURCES:.c=.o) $(ASM_SOURCES:.S=.o)
-
-all: $(TARGET).elf
-
-$(TARGET).elf: $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
-
+$(target): $(obj)
+	$(ld) $(ldflags) $(obj) -o $@
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
+	$(cc) $(cflags) -c $< -o $@
 %.o: %.S
-	$(CC) $(CFLAGS) -c $< -o $@
-
+	$(cc) $(cflags) -c $< -o $@
 clean:
-	rm -f *.o *.elf
+	rm -rf *.o *.elf

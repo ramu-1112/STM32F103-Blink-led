@@ -1,6 +1,5 @@
 /* FLASH 64KB, RAM 20KB */
 
-ENTRY(Reset_Handler)
 
 MEMORY 
 {
@@ -8,6 +7,7 @@ MEMORY
     SRAM  (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
 }
 
+ENTRY(Reset_Handler)
 _estack = ORIGIN(SRAM) + LENGTH(SRAM);
 
 SECTIONS {
@@ -35,7 +35,7 @@ SECTIONS {
         . = ALIGN(4);
     } > FLASH
     
-    .data : AT (ADDR(.text) + SIZEOF(.text))
+    .data : AT (ADDR(.text) + SIZEOF(.text) + SIZEOF(.rodata))
     {
         . = ALIGN(4);
         _sdata = .;
